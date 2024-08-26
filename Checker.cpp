@@ -14,7 +14,7 @@ using namespace std;
 //     return false;
 //   }
 //   return true;
-}
+//}
 
 bool isTemperatureOk(float temperature)
 {
@@ -26,7 +26,7 @@ bool isSocOk(float soc)
   return(soc >=20 && soc <=80);
 }
 
-bool is ChargeRateOk(float chargeRate)
+bool isChargeRateOk(float chargeRate)
 {
   return(chargerate <= 0.8);
 }
@@ -36,7 +36,7 @@ bool batteryIsOk(float temperature, float soc, float chargeRate)
   
  bool tempOk = isTemperatureOk(temperature);
  bool socOk = isSocOk(soc);
- bool chargeRateOk = ChargeRateOk(chargeRate);
+ bool chargeRateOk = isChargeRateOk(chargeRate);
 
 if (tempOk && socOk && chargeRateOk)
 {
