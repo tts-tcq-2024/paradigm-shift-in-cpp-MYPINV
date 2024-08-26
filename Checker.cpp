@@ -28,7 +28,7 @@ bool isSocOk(float soc)
 
 bool isChargeRateOk(float chargeRate)
 {
-  return(chargerate <= 0.8);
+  return(chargeRate <= 0.8);
 }
 
 bool batteryIsOk(float temperature, float soc, float chargeRate) 
