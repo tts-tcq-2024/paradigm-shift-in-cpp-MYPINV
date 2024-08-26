@@ -40,7 +40,7 @@ bool batteryIsOk(float temperature, float soc, float chargeRate)
 
 if (tempOk && socOk && chargeRateOk)
 {
-  return true
+  return true;
 }    
 
 if(!tempOk)
