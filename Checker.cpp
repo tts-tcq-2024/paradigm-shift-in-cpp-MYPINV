@@ -42,7 +42,8 @@ bool batteryIsOk(float temperature, float soc, float chargeRate)
   {
     cout << "Charge rate out of range!" << endl;
   }
-  
+
+  return false;  
 }
 
 int main() 
