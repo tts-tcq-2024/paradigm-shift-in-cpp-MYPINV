@@ -1,5 +1,4 @@
-#include "TemperatureCheck.h"
-#include "ParameterChecker.h"
+#include "BatteryChecks.hpp"
 #include <iostream>
 using namespace std;
 
