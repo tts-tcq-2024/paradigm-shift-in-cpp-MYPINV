@@ -2,29 +2,23 @@
 #include <iostream>
 using namespace std;
 
+void displayTemperatureWarning(float temperature, float tempLower, float tempUpper, float tempTolerance) {
+    if (temperature <= tempLower + tempTolerance) {
+        cout << "Warning: Approaching low temperature!" << endl;
+    } 
+    else if (temperature >= tempUpper - tempTolerance) {
+        cout << "Warning: Approaching high temperature!" << endl;
+    }
+}
+
 void checkTemperature(float temperature) {
-  // Temperature parameters
-  float tempLower = 0.0, tempUpper = 45.0;
-  float tempTolerance = tempUpper * 0.05;
+    float tempLower = 0.0, tempUpper = 45.0;
+    float tempTolerance = tempUpper * 0.05;
 
-  // Check if temperature is out of range
-  auto isTemperatureOutOfRange = [tempLower, tempUpper](float temp) {
-    if (temp < tempLower || temp > tempUpper) {
-      cout << "Temperature out of range!" << endl;
-      return true;
+    // Check if temperature is out of range and display warnings
+    if (temperature < tempLower || temperature > tempUpper) {
+        cout << "Temperature out of range!" << endl;
+    } else {
+        displayTemperatureWarning(temperature, tempLower, tempUpper, tempTolerance);
     }
-    return false;
-  };
-
-  // Display temperature warnings
-  auto displayTemperatureWarning = [tempLower, tempUpper, tempTolerance](float temp) {
-    if (temp <= tempLower + tempTolerance) {
-      cout << "Warning: Approaching low temperature!" << endl;
-    }
-    if (temp >= tempUpper - tempTolerance) {
-      cout << "Warning: Approaching high temperature!" << endl;
-    }
-  };
-
-  checkParameter(temperature, isTemperatureOutOfRange, displayTemperatureWarning);
 }
