@@ -1,53 +1,89 @@
-#include <assert.h>
 #include <iostream>
+#include <functional> // for std::function
 using namespace std;
 
-bool isTemperatureOk(float temperature)
-{
-  return(temperature >= 0 && temperature <= 45);
+// Generic function to check value ranges and warnings
+bool checkParameter(float value, const std::function<bool(float)>& isOutOfRange, const std::function<void(float)>& displayWarning) {
+  if (isOutOfRange(value)) {
+    return false;
+  }
+  displayWarning(value);
+  return true;
 }
 
-bool isSocOk(float soc)
-{
-  return(soc >=20 && soc <=80);
-}
+int main() {
+  // Temperature parameters
+  float tempLower = 0.0, tempUpper = 45.0;
+  float tempTolerance = tempUpper * 0.05;
 
-bool isChargeRateOk(float chargeRate)
-{
-  return(chargeRate <= 0.8);
-}
+  // SoC parameters
+  float socLower = 20.0, socUpper = 80.0;
+  float socTolerance = socUpper * 0.05;
 
-bool batteryIsOk(float temperature, float soc, float chargeRate) 
-{
-  bool tempOk = isTemperatureOk(temperature);
-  bool socOk = isSocOk(soc);
-  bool chargeRateOk = isChargeRateOk(chargeRate);
+  // Charge rate parameters
+  float chargeRateUpper = 0.8;
+  float chargeRateTolerance = chargeRateUpper * 0.05;
 
-  if (tempOk && socOk && chargeRateOk)
-  {
-    return true;
-  }    
+  // Check temperature
+  auto isTemperatureOutOfRange = [tempLower, tempUpper](float temp) {
+    if (temp < tempLower || temp > tempUpper) {
+      cout << "Temperature out of range!" << endl;
+      return true;
+    }
+    return false;
+  };
 
-  if(!tempOk)
-  {
-    cout << "Temperature out of range!" << endl;
+  auto displayTemperatureWarning = [tempLower, tempUpper, tempTolerance](float temp) {
+    if (temp <= tempLower + tempTolerance) {
+      cout << "Warning: Approaching low temperature!" << endl;
+    }
+    if (temp >= tempUpper - tempTolerance) {
+      cout << "Warning: Approaching high temperature!" << endl;
+    }
+  };
+
+  // Check SoC
+  auto isSocOutOfRange = [socLower, socUpper](float soc) {
+    if (soc < socLower || soc > socUpper) {
+      cout << "State of Charge out of range!" << endl;
+      return true;
+    }
+    return false;
+  };
+
+  auto displaySocWarning = [socLower, socUpper, socTolerance](float soc) {
+    if (soc <= socLower + socTolerance) {
+      cout << "Warning: Approaching discharge!" << endl;
+    }
+    if (soc >= socUpper - socTolerance) {
+      cout << "Warning: Approaching charge-peak!" << endl;
+    }
+  };
+
+  // Check charge rate
+  auto isChargeRateOutOfRange = [chargeRateUpper](float chargeRate) {
+    if (chargeRate > chargeRateUpper) {
+      cout << "Charge rate out of range!" << endl;
+      return true;
+    }
+    return false;
+  };
+
+  auto displayChargeRateWarning = [chargeRateUpper, chargeRateTolerance](float chargeRate) {
+    if (chargeRate >= chargeRateUpper - chargeRateTolerance) {
+      cout << "Warning: Approaching charge rate peak!" << endl;
+    }
+  };
+
+  // Battery check logic
+  bool batteryIsOk = true;
+  batteryIsOk &= checkParameter(43.0, isTemperatureOutOfRange, displayTemperatureWarning);
+  batteryIsOk &= checkParameter(78.0, isSocOutOfRange, displaySocWarning);
+  batteryIsOk &= checkParameter(0.79, isChargeRateOutOfRange, displayChargeRateWarning);
+
+  if (batteryIsOk) {
+    cout << "Battery is OK" << endl;
   }
 
-  if(!socOk)
-  {
-    cout << "State of Charge out of range!" << endl;
-  }
-
-  if(!chargeRateOk)
-  {
-    cout << "Charge rate out of range!" << endl;
-  }
-
-  return false;  
-}
-
-int main() 
-{
-  assert(batteryIsOk(25, 70, 0.7) == true);
-  assert(batteryIsOk(50, 85, 0) == false);
+  return 0;
 }
